@@ -27,14 +27,14 @@ async def get():
   return {"message": "AI Demo"}
 
 class ConstructionQuery(BaseModel):
-  question: str
+  message: str
   
 @app.post("/api/demo-agent")
 async def start_chat(req_body: ConstructionQuery):
   thread_id = str(uuid.uuid4())
   config = {"configurable": {"thread_id": thread_id}}
   state = {
-    "messages": [HumanMessage(content=req_body.question)]
+    "messages": [HumanMessage(content=req_body.message)]
   }
   
   response = agent.invoke(state, config=config)
@@ -49,7 +49,7 @@ async def start_chat(req_body: ConstructionQuery):
 async def continue_chat(req_body: ConstructionQuery, thread_id: str):
   config = {"configurable": {"thread_id": thread_id}}
   state = {
-    "messages": [HumanMessage(content=req_body.question)]
+    "messages": [HumanMessage(content=req_body.message)]
   }
   
   response = agent.invoke(state, config=config)

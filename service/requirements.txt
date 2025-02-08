@@ -1,0 +1,16 @@
+fastapi==0.115.5
+langchain_community==0.3.8
+langchain_core==0.3.21
+langchain_google_genai==2.0.6
+langchain_groq==0.2.1
+langchain_ollama==0.2.0
+langchain_pinecone==0.2.0
+langgraph==0.2.53
+mangum==0.19.0
+protobuf==3.20.3
+pydantic==2.10.2
+python-dotenv==1.0.1
+google-cloud-translate==2.0.4
+setuptools==75.6.0
+duckduckgo-search
+fastapi[standard]

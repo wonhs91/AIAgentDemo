@@ -5,7 +5,7 @@ from pydantic import BaseModel
 import uuid
 from mangum import Mangum
 
-from service.agent.agent import AIDemoAgent
+from agent.agent import AIDemoAgent
 
 app = FastAPI()
 
@@ -24,12 +24,12 @@ handler = Mangum(app)
 
 @app.get("/")
 async def get():
-  return {"message": "Welcome to Fairfax Construction World!"}
+  return {"message": "AI Demo"}
 
 class ConstructionQuery(BaseModel):
   question: str
   
-@app.post("/api/fairfax-construction-assistant")
+@app.post("/api/demo-agent")
 async def start_chat(req_body: ConstructionQuery):
   thread_id = str(uuid.uuid4())
   config = {"configurable": {"thread_id": thread_id}}
@@ -45,7 +45,7 @@ async def start_chat(req_body: ConstructionQuery):
   return {"answer": response['messages'][-1].content, "thread_id": thread_id}
 
 
-@app.post("/api/fairfax-construction-assistant/{thread_id}")
+@app.post("/api/demo-agent/{thread_id}")
 async def continue_chat(req_body: ConstructionQuery, thread_id: str):
   config = {"configurable": {"thread_id": thread_id}}
   state = {

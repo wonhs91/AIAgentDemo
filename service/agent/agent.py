@@ -9,19 +9,29 @@ from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_core.tools import tool
 from langchain_core.messages import AnyMessage, SystemMessage, AIMessage, HumanMessage
 from langchain_core.tools import tool
+from langgraph.constants import Send
 from langchain_pinecone import PineconeVectorStore
 from langchain_community.tools import DuckDuckGoSearchResults
 from langgraph.prebuilt import ToolNode
 from langgraph.graph import add_messages, StateGraph, START, END
 from langgraph.checkpoint.memory import MemorySaver
 
-load_dotenv()
+load_dotenv(override=True)
 
+def get_llama31_llm():
+  from langchain_google_vertexai import ChatVertexAI
+  vertex_llm = ChatVertexAI(  
+      model="llama-3.1-70b-instruct-maas",
+      max_retries=1,
+      location="us-central1",
+      max_tokens=4000,
+  )
+  return vertex_llm
 
 class AIDemoAgent:
     def __init__(self,
                  groq_model="deepseek-r1-distill-llama-70b",
-                 pinecone_ind_name="fairfax-county-construction-code",
+                 pinecone_ind_name="langgraph-docs",
                  embedding_model="models/text-embedding-004"):
         
         self.llm_model = os.environ.get('GROQ_MODEL', groq_model)
@@ -29,6 +39,7 @@ class AIDemoAgent:
         self.embedding_model = os.environ.get('EMBEDDING_MODEL', embedding_model)
         
         self.llm = ChatGroq(model=self.llm_model)    
+        # self.llm = get_llama31_llm()
         self.vectorstore = PineconeVectorStore(index_name=self.pinecone_ind_name, embedding=GoogleGenerativeAIEmbeddings(model=self.embedding_model))
     
         self.llm_with_tools = None
@@ -36,13 +47,14 @@ class AIDemoAgent:
         self.bind_llm_with_tools()
         
         self.agent = None
-    
+
+        self.curr_docs = []
     
     def bind_llm_with_tools(self):
         
         @tool
         def vectordb_search(search_query: str):
-            """Search the query from Fairfax County webpages/PDFs vectorstore db
+            """Search the query from vectorstore db on langgraph
 
             Args:
                 search_query: query to search in vectorstore db
@@ -51,6 +63,7 @@ class AIDemoAgent:
             retriever = self.vectorstore.as_retriever()
             retrieved_docs = retriever.invoke(search_query)
             # return evaluate_documents(search_query, retrieved_docs)
+            self.curr_docs = retrieved_docs
             return retrieved_docs
 
         @ tool
@@ -87,62 +100,58 @@ class AIDemoAgent:
         
         class State(TypedDict):
             messages: Annotated[list[AnyMessage], add_messages]
+            sources: list[dict]
             
             # main agent
         def main_agent(state):
             sys_msg = """
-            You are a ReAct Research Agent for Fairfax Construction Information
+1. **Role and Purpose**  
+   - Define the AI’s role as a specialized assistant for LangGraph inquiries.  
+   - Emphasize accuracy and clarity.  
 
-            CORE CAPABILITIES:
-            - Research and answer Fairfax construction-related queries
-            - Utilize two primary research tools:
-            1. Vectorstore (Static Fairfax County webpages/PDFs)
-            2. Internet search
-            - Employ clarification agent for additional user context
+2. **Core Functionality (ReAct Framework)**  
+   - Explain the ReAct workflow: **Reason** (analyze query), **Act** (choose tool), **Repeat** (validate/critique).  
+   - List the three tools and their purposes.  
 
-            STRICT RULES:
-            - NEVER make up or assume any information
-            - ALL information MUST be sourced from tools
-            - Citations MUST follow this format:
-            * For Web Pages:
-                [Source: URL | Section: specific section | Retrieved: date]
-            * For PDF Documents:
-                [Source: PDF filename | Page: page number | Section: section title]
-            * For Vector Database:
-                [Source: Document ID | Type: PDF/Web | Location: specific location]
-            - If information cannot be found through tools, acknowledge the limitation
+3. **Tool Selection Guidelines**  
+   - **VectorStore Search**:  
+     - Mandatory for LangGraph-specific questions (APIs, workflows, concepts).  
+     - Prohibited for non-LangGraph topics (e.g., general Python).  
+   - **Internet Search**:  
+     - Use only if VectorStore lacks info or for very recent/niche updates.  
+     - Avoid redundancy (don’t use if VectorStore answers sufficiently).  
+   - **Clarification Tool**:  
+     - Trigger when the query is ambiguous, vague, or lacks context.  
 
-            RESEARCH METHODOLOGY (ReAct Framework):
-            1. Thought: Analyze query comprehensively
-            - Identify specific information needs
-            - Determine research strategy
-            - Plan tool utilization
+4. **Response Workflow**  
+   - Step 1: Check if the query is LangGraph-related.  
+   - Step 2: Use VectorStore first; validate answer completeness.  
+   - Step 3: If gaps exist, use Internet Search.  
+   - Step 4: If unclear, ask the user for clarification.  
 
-            2. Action: Execute targeted research
-            - Search Vectorstore first
-            - Perform internet search if needed
-            - Request user clarifications via clarification agent
+5. **Tone and Style**  
+   - Concise, technical but approachable.  
+   - Avoid assumptions; clarify jargon if needed.  
 
-            3. Observation: Synthesize findings
-            - Validate information accuracy
-            - Cross-reference sources
-            - Identify potential knowledge gaps
+6. **Error Handling**  
+   - If no results from tools: State uncertainty and offer alternatives (e.g., “Would you like me to search the web?”).  
 
-            RESEARCH PROTOCOL:
-            - Prioritize official Fairfax County sources
-            - Maintain strict relevance to query
-            - Provide clear, structured responses
+7. **Ethical Boundaries**  
+   - Refuse off-topic, harmful, or non-technical requests politely.  
 
-            CRITICAL CONSTRAINTS:
-            - Focus on Fairfax construction information
-            - Ensure response accuracy
-            - Transparently document research process
-            """
+"""
 
             response = self.llm_with_tools.invoke([SystemMessage(content=sys_msg)] + state['messages'])
-            return {
+            res_state = {
                 'messages': [response]
             }
+            if self.curr_docs:
+                metadata_list = [item.metadata for item in self.curr_docs]
+                res_state['sources'] = metadata_list
+                # remove sources
+                self.curr_docs = []
+
+            return res_state
 
         class UserClarificationState(TypedDict):
             question: str
@@ -156,6 +165,8 @@ class AIDemoAgent:
                 'messages': [AIMessage(content=question)],
                 'tool_call_id': tool_call_id
             }
+
+
 
 
         def tools_condition_route(state) -> Literal['tools', "ask_user", END]:

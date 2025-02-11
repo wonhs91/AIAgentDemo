@@ -42,7 +42,7 @@ async def start_chat(req_body: ConstructionQuery):
   for m in response['messages']:
     print(m.pretty_print())
     
-  return {"answer": response['messages'][-1].content, "thread_id": thread_id}
+  return {"answer": response['messages'][-1].content, "thread_id": thread_id, "sources": response.get('sources', [])}
 
 
 @app.post("/api/demo-agent/{thread_id}")
@@ -54,4 +54,4 @@ async def continue_chat(req_body: ConstructionQuery, thread_id: str):
   
   response = agent.invoke(state, config=config)
   
-  return {"answer": response['messages'][-1].content, "thread_id": thread_id}
+  return {"answer": response['messages'][-1].content, "thread_id": thread_id, "sources": response.get('sources', [])}

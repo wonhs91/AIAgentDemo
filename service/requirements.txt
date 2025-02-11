@@ -14,3 +14,4 @@ google-cloud-translate==2.0.4
 setuptools==75.6.0
 duckduckgo-search
 fastapi[standard]
+langchain_google_vertexai

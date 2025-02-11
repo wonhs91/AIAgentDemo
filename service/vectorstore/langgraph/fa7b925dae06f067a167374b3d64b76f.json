@@ -1,0 +1,9 @@
+{
+    "page_content": "# Constants\n\n##  `` `TAG_HIDDEN = sys.intern('langsmith:hidden')` `module-attribute` \u00b6\n\nTag to hide a node/edge from certain tracing/streaming environments.\n\n##  `` `START = sys.intern('__start__')` `module-attribute` \u00b6\n\nThe first (maybe virtual) node in graph-style Pregel.\n\n##  `` `END = sys.intern('__end__')` `module-attribute` \u00b6\n\nThe last (maybe virtual) node in graph-style Pregel.\n\n## Comments\n",
+    "metadata": {
+        "url": "https://langchain-ai.github.io/langgraph/reference/constants/#langgraph.constants.END",
+        "title": "Constants",
+        "description": "Build language agents as graphs",
+        "keywords": "No keywords"
+    }
+}

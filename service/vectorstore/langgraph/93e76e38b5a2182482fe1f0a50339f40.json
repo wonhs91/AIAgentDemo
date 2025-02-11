@@ -1,0 +1,9 @@
+{
+    "page_content": "# LangGraph SDK\u00b6\n\nPrerequisites\n\n  * LangGraph Platform\n  * LangGraph Server\n\n\n\nThe LangGraph Platform provides both a Python and JS SDK for interacting with the LangGraph Server API. \n\n## Installation\u00b6\n\nYou can install the packages using the appropriate package manager for your language.\n\nPythonJS\n[code] \n    pip install langgraph-sdk\n    \n[/code]\n[code] \n    yarn add @langchain/langgraph-sdk\n    \n[/code]\n\n## API Reference\u00b6\n\nYou can find the API reference for the SDKs here:\n\n  * Python SDK Reference\n  * JS/TS SDK Reference\n\n\n\n## Python Sync vs. Async\u00b6\n\nThe Python SDK provides both synchronous (`get_sync_client`) and asynchronous (`get_client`) clients for interacting with the LangGraph Server API.\n\nAsyncSync\n[code] \n    from langgraph_sdk import get_client\n    \n    client = get_client(url=..., api_key=...)\n    await client.assistants.search()\n    \n[/code]\n[code] \n    from langgraph_sdk import get_sync_client\n    \n    client = get_sync_client(url=..., api_key=...)\n    client.assistants.search()\n    \n[/code]\n\n## Related\u00b6\n\n  * LangGraph CLI API Reference\n  * Python SDK Reference\n  * JS/TS SDK Reference\n\n\n\n## Comments\n",
+    "metadata": {
+        "url": "https://langchain-ai.github.io/langgraph/concepts/sdk/",
+        "title": "LangGraph SDK",
+        "description": "Build language agents as graphs",
+        "keywords": "No keywords"
+    }
+}

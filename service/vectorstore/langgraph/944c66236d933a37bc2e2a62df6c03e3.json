@@ -1,0 +1,9 @@
+{
+    "page_content": "# Tutorials\u00b6\n\nWelcome to the LangGraph.js Tutorials! These notebooks introduce LangGraph through building various language agents and applications.\n\n## Quick Start\u00b6\n\nLearn the basics of LangGraph through a comprehensive quick start in which you will build an agent from scratch.\n\n  * Quick Start\n  * Common Workflows: Overview of the most common workflows using LLMs implemented with LangGraph.\n  * LangGraph Cloud Quick Start: In this tutorial, you will build and deploy an agent to LangGraph Cloud.\n\n\n\n## Use cases\u00b6\n\nLearn from example implementations of graphs designed for specific scenarios and that implement common design patterns.\n\n#### Chatbots\u00b6\n\n  * Customer support with a small model\n\n\n\n#### RAG\u00b6\n\n  * Agentic RAG\n  * Corrective RAG\n  * Self-RAG\n\n\n\n#### Multi-Agent Systems\u00b6\n\n  * Collaboration: Enabling two agents to collaborate on a task\n  * Supervision: Using an LLM to orchestrate and delegate to individual agents\n  * Hierarchical Teams: Orchestrating nested teams of agents to solve problems\n\n\n\n#### Planning Agents\u00b6\n\n  * Plan-and-Execute: Implementing a basic planning and execution agent\n\n\n\n#### Reflection & Critique\u00b6\n\n  * Basic Reflection: Prompting the agent to reflect on and revise its outputs\n  * Rewoo: Reducing re-planning by saving observations as variables\n\n\n\n### Evaluation\u00b6\n\n  * Agent-based: Evaluate chatbots via simulated user interactions\n\n\n",
+    "metadata": {
+        "url": "https://langchain-ai.github.io/langgraphjs/tutorials/",
+        "title": "Tutorials",
+        "description": "Build language agents as graphs",
+        "keywords": "No keywords"
+    }
+}

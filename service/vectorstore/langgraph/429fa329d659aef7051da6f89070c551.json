@@ -1,0 +1,9 @@
+{
+    "page_content": "# Deployment\u00b6\n\nGet started deploying your LangGraph applications locally or on the cloud with LangGraph Platform.\n\n## Get Started \ud83d\ude80\u00b6\n\n  * LangGraph Server Quickstart: Launch a LangGraph server locally and interact with it using REST API and LangGraph Studio Web UI.\n  * LangGraph Template Quickstart: Start building with LangGraph Platform using a template application.\n  * Deploy with LangGraph Cloud Quickstart: Deploy a LangGraph app using LangGraph Cloud.\n\n\n\n## Deployment Options\u00b6\n\n  * Self-Hosted Lite: A free (up to 1 million nodes executed per year), limited version of LangGraph Platform that you can run locally or in a self-hosted manner\n  * Cloud SaaS: Hosted as part of LangSmith.\n  * Bring Your Own Cloud: We manage the infrastructure, so you don't have to, but the infrastructure all runs within your cloud.\n  * Self-Hosted Enterprise: Completely managed by you.\n\n\n\n## Comments\n",
+    "metadata": {
+        "url": "https://langchain-ai.github.io/langgraph/tutorials/deployment/",
+        "title": "Deployment",
+        "description": "Build language agents as graphs",
+        "keywords": "No keywords"
+    }
+}

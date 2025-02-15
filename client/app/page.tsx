@@ -128,12 +128,12 @@ export default function ChatDemo() {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <Card className="w-full max-w-2xl">
+      <Card className="w-full max-w-4xl">
         <CardHeader>
-          <CardTitle>AI Agent Demo</CardTitle>
+          <CardTitle className="text-xl">AI Agent Demo</CardTitle>
         </CardHeader>
         <CardContent>
-          <ScrollArea className="h-[60vh] pr-4">
+          <ScrollArea className="h-[80vh] pr-4">
             {" "}
             {/* Added pr-4 for right padding */}
             <div className="space-y-4">

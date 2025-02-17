@@ -54,7 +54,7 @@ class AIDemoAgent:
         
         @tool
         def vectordb_search(search_query: str):
-            """Search the query from vectorstore db on langgraph
+            """If there is any questions regarding langgraph, use this tool to search relevant langgraph documents.
 
             Args:
                 search_query: query to search in vectorstore db
@@ -125,7 +125,7 @@ class AIDemoAgent:
 
 4. **Response Workflow**  
    - Step 1: Check if the query is LangGraph-related.  
-   - Step 2: Use VectorStore first; validate answer completeness.  
+   - Step 2: Must use vectorestore if it is LanGraph-related; validate answer completeness.  
    - Step 3: If gaps exist, use Internet Search.  
    - Step 4: If unclear, ask the user for clarification.  
 
@@ -141,7 +141,7 @@ class AIDemoAgent:
 
 """
 
-            response = self.llm_with_tools.invoke([SystemMessage(content=sys_msg)] + state['messages'])
+            response = self.llm_with_tools.invoke([SystemMessage(content=sys_msg)] + [state['messages'][-1]])
             res_state = {
                 'messages': [response]
             }
@@ -150,6 +150,8 @@ class AIDemoAgent:
                 res_state['sources'] = metadata_list
                 # remove sources
                 self.curr_docs = []
+            else:
+                res_state['sources'] = []
 
             return res_state
 

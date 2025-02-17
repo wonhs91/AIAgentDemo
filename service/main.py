@@ -34,7 +34,8 @@ async def start_chat(req_body: ConstructionQuery):
   thread_id = str(uuid.uuid4())
   config = {"configurable": {"thread_id": thread_id}}
   state = {
-    "messages": [HumanMessage(content=req_body.message)]
+    "messages": [HumanMessage(content=req_body.message)],
+    "sources": []
   }
   
   response = agent.invoke(state, config=config)
